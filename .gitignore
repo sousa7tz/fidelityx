@@ -1,0 +1,21 @@
+# FidelityX by sousa7tz
+
+# security
+.env
+.env.local
+.env.testing
+
+# dependencies
+/vendor/
+
+# os
+.DS_Store
+Thumbs.db
+
+# ide
+.vscode/
+.idea/
+
+# logs
+*.log
+/cache/

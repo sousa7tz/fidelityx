@@ -1,0 +1,8 @@
+{
+    "name": "sousa7tz/fidelityx",
+    "description": "Sistema de Fidelidade FidelityX",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
