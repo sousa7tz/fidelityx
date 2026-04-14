@@ -1,0 +1,38 @@
+/* public/css/global.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root {
+    /* Cores Dark Mode */
+    --primary: #818cf8;
+    /* Indigo mais claro para contrastar no escuro */
+    --primary-hover: #a5b4fc;
+    --bg-body: #111827;
+    /* Fundo principal (quase preto) */
+    --bg-card: #1f2937;
+    /* Fundo dos cards (um pouco mais claro) */
+    --text-main: #f3f4f6;
+    /* Texto principal (quase branco) */
+    --text-muted: #9ca3af;
+    /* Texto secundário (cinza) */
+    --border: #374151;
+    /* Bordas sutis */
+
+    /* Utilitários */
+    --radius: 12px;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.5;
+}

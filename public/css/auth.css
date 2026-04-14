@@ -1,0 +1,97 @@
+/* public/css/auth.css */
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* Mobile First: O card ocupa 100% da largura disponível */
+.auth-container {
+    width: 100%;
+    background: var(--bg-card);
+    padding: 2.5rem 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    /* Borda sutil no card */
+}
+
+/* Logo Oficial */
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.auth-logo {
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.auth-header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.auth-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade para Tablet/PC (telas maiores que 640px) */
+@media (min-width: 640px) {
+    .auth-container {
+        max-width: 420px;
+        /* Limita a largura no PC */
+        padding: 3rem;
+        /* Mais respiro no PC */
+    }
+}
+
+@media (min-width: 1024px) { /* Foco em Monitores/Laptops */
+    .auth-container { 
+        max-width: 500px; /* Card um pouco mais largo no PC */
+        padding: 4rem;    /* Muito mais respiro interno */
+    }
+
+    .auth-header h1 {
+        font-size: 2.5rem; /* Título mais imponente */
+    }
+
+    .auth-logo {
+        max-width: 240px; /* Logo maior no PC */
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        font-size: 1rem; /* Texto do label mais legível */
+    }
+
+    .form-group input {
+        padding: 1rem 1.2rem; /* Inputs mais robustos */
+        font-size: 1.1rem;
+    }
+
+    .btn-primary {
+        padding: 1.2rem;
+        font-size: 1.1rem; /* Botão com presença */
+    }
+
+    .auth-footer {
+        font-size: 1rem; /* Rodapé mais visível */
+    }
+}
