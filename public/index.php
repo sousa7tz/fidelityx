@@ -80,7 +80,12 @@ switch ($domain) {
                 $controller->renderProfile();
                 break;
             default:
-                echo "Página não encontrada :( - (404)";
+                
+                require_once __DIR__ . '/../src/Controllers/ErrorController.php';
+
+                $controller = new \App\Controllers\ErrorController();
+                $controller->handle(404);
+                break;
         }
         break;
     
@@ -89,9 +94,8 @@ switch ($domain) {
         break;
 
     default:
-        require_once __DIR__ . '/../src/Controllers/UnknownController.php';
-        $controller = new UnknownController($db_connection);
-        $controller->renderLandingPage();
+        require_once __DIR__ . '/../src/Controllers/ErrorController.php';
+        $controller = new \App\Controllers\ErrorController();
+        $controller->handle(404);
         break;
-
 }

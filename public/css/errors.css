@@ -1,0 +1,95 @@
+/* public/css/errors.css */
+:root {
+    --bg: #0b0f1a;
+    --surface: #161e2d;
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.4);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Efeito de fundo tech */
+.bg-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: var(--primary);
+    filter: blur(150px);
+    border-radius: 50%;
+    opacity: 0.15;
+    z-index: -1;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Animação da Logo */
+.logo-container img {
+    width: 120px;
+    margin-bottom: 2rem;
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.error-code {
+    font-size: 8rem;
+    font-weight: 900;
+    margin: 0;
+    background: linear-gradient(180deg, #fff 0%, var(--text-muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+p {
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+}
+
+.btn-home {
+    background: var(--primary);
+    color: #white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-block;
+    transition: 0.3s;
+    box-shadow: 0 0 20px var(--primary-glow);
+}
+
+.btn-home:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--primary);
+}

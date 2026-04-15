@@ -2,9 +2,17 @@
 
 namespace App\Controllers;
 class ErrorController {
-    public function notFound(){ //ERRO 404
-        http_response_code(404);
-        require_once __DIR__ . '/../../views/errors/404.php';
-        exit;
+    public function handle($code = 404) {
+        http_response_code($code);
+        
+        $viewPath = __DIR__ . "/../../views/errors/{$code}.php";
+        
+        if (file_exists($viewPath)) {
+            require_once $viewPath;
+        } else {
+
+            require_once __DIR__ . '/../../views/errors/default.php';
+        }
+        return;
     }
 }
