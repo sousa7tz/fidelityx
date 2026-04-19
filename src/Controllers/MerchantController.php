@@ -8,11 +8,11 @@ class MerchantController {
     }
 
     public function renderLogin() {
-        require_once __DIR__ . '/../../views/merchant/login.php';
+        require_once __DIR__ . '/../../views/auth/merchant/login.php';
     }
 
     public function renderRegister() {
-        require_once __DIR__ . '/../../views/merchant/register.php';
+        require_once __DIR__ . '/../../views/auth/merchant/register.php';
     }
 
 }
