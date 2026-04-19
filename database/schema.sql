@@ -1,11 +1,11 @@
--- FidelityX (SaaS de fidelidade) - MySQL 8.0+
--- Infra: InnoDB + utf8mb4 + utf8mb4_unicode_ci
+-- fidelityx - MySQL 8.0+
+-- infra: InnoDB + utf8mb4 + utf8mb4_unicode_ci
 
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 SET time_zone = '+00:00';
 
 -- =========================
--- merchants (Lojistas)
+-- merchants // lojistas
 -- =========================
 CREATE TABLE IF NOT EXISTS merchants (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -13,12 +13,12 @@ CREATE TABLE IF NOT EXISTS merchants (
   name VARCHAR(255) NOT NULL,
   store_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
+  phone VARCHAR(30) NULL,
   password_hash VARCHAR(255) NOT NULL,
   plan ENUM('free', 'pro') NOT NULL,
   status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
 
-  -- Future-proofing (NULL)
-  phone VARCHAR(30) NULL,
+  -- para futuras implementações (NULL)
   cnpj VARCHAR(14) NULL,
   address VARCHAR(255) NULL,
   city VARCHAR(100) NULL,
@@ -30,12 +30,12 @@ CREATE TABLE IF NOT EXISTS merchants (
 
   UNIQUE KEY uq_merchants_email (email),
   UNIQUE KEY uq_merchants_cnpj (cnpj),
-  KEY idx_merchants_status (status),
+  KEY idx_merchants_status (status), -- teste com indices pra melhorar a otimizacao de busca
   KEY idx_merchants_plan (plan)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================
--- customers (Clientes)
+-- customers // clientes
 -- =========================
 CREATE TABLE IF NOT EXISTS customers (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS customers (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================
--- loyalty_cards (Cartão digital)
+-- loyalty_cards // cartões de fidelidade
 -- =========================
 CREATE TABLE IF NOT EXISTS loyalty_cards (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS loyalty_cards (
   current_points INT NOT NULL DEFAULT 0,
   total_accumulated INT NOT NULL DEFAULT 0,
 
-  -- Future-proofing (NULL)
+  -- para futuras implementações (NULL)
   last_use_at TIMESTAMP NULL,
   expiration_date TIMESTAMP NULL,
 
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS loyalty_cards (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================
--- points_log (Histórico / Auditoria)
+-- points_log // histórico / auditoria
 -- =========================
 CREATE TABLE IF NOT EXISTS points_log (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS points_log (
   quantity INT NOT NULL,
   description VARCHAR(255) NOT NULL,
 
-  -- Future-proofing (NULL)
+  -- para futuras implementações (NULL)
   responsible_user VARCHAR(255) NULL,
   ip_address VARCHAR(45) NULL,
 
@@ -116,4 +116,3 @@ CREATE TABLE IF NOT EXISTS points_log (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
