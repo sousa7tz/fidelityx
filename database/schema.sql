@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS fidelityx;
+USE fidelityx;
+
 -- fidelityx - MySQL 8.0+
 -- infra: InnoDB + utf8mb4 + utf8mb4_unicode_ci
 
