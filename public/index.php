@@ -1,100 +1,63 @@
 <?php
 
-// 1. loading db
+// inicializacao
 session_start();
-require_once __DIR__ . '/../config/db.php';
 
+// autoloading psr-4 , carrega as classes necessárias, não tem necessidade de ficar puxando com require, include, etc.
+// pro nosso caso especifico, substitui massivamente os requires, deixa o código mais limpo e combinado com o singleton
+// aumenta muito o desempenho e otimizaçao pra larga escala.
 
-// 2. the "way" of traffic
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    // url filter | ex: fidelityx.com.br/merchant/dashboard = ['merchant', 'dashboard']
+// namespace 
+use App\Database;
+
+// conexao com o banco
+$db = Database::getConnection();
+
+// sistema tratamento da url. exemplo resultado final: http://localhost:8080/index.php?url=merchant/register
 $url = $_GET['url'] ?? 'home';
-$urlParts = explode('/', filter_var(rtrim($url, '/'), FILTER_SANITIZE_URL));
+$url = filter_var(rtrim($url, '/'), FILTER_SANITIZE_URL);
+$urlParts = explode('/', $url);
 
-// 3. views
-
-$domain = $urlParts[0]; // select one of the down cases
+$domain = $urlParts[0];
+$action = $urlParts[1] ?? 'dashboard';
 
 switch ($domain) {
     
     case 'customer':
-        $action = $urlParts[1] ?? 'dashboard';
-        switch ($action) {
-            case 'newPoint':
-                require_once __DIR__ . '/../src/Controllers/CustomerController.php';
-                $controller = new CustomerController($db_connection);
-                $controller->renderNewPoint();
-                break;
-            case 'dashboard':
-                require_once __DIR__ . '/../src/Controllers/CustomerController.php';
-                $controller = new CustomerController($db_connection);
-                $controller->renderDashboard();
-                break;
-            case 'prize':
-                require_once __DIR__ . '/../src/Controllers/CustomerController.php';
-                $controller = new CustomerController($db_connection);
-                $controller->renderPrize();
-                break;
-            case 'redeem':
-                require_once __DIR__ . '/../src/Controllers/CustomerController.php';
-                $controller = new CustomerController($db_connection);
-                $controller->renderRedeemPrize();
-                break;
-            default:
-                echo "Página não encontrada :( - (404)";
-        }
+        // exemplo do psr-4 citado acima, sem require_once
+        $controller = new \App\Controllers\CustomerController($db);
+        
+        // match é o novo switch do php, disponivel a partir do php8, deixa o codigo mais limpo
+        match ($action) {
+            'newPoint' => $controller->renderNewPoint(),
+            'prize'    => $controller->renderPrize(),
+            'redeem'   => $controller->renderRedeemPrize(),
+            default    => $controller->renderDashboard(),
+        };
         break;
-
 
     case 'merchant':
-        $action = $urlParts[1];
-        switch ($action) {
-            case 'login':
-                require_once __DIR__ . '/../src/Controllers/MerchantController.php';
-                $controller = new MerchantController($db_connection);
-                $controller->renderLogin();
-                break;
-            case 'register':
-                require_once __DIR__ . '/../src/Controllers/MerchantController.php';
-                $controller = new MerchantController($db_connection);
-                $controller->renderRegister();
-                break;
-            case 'dashboard':
-                require_once __DIR__ . '/../src/Controllers/MerchantController.php';
-                $controller = new MerchantController($db_connection);
-                $controller->renderDashboard();
-                break;
-            case 'score':
-                require_once __DIR__ . '/../src/Controllers/MerchantController.php';
-                $controller = new MerchantController($db_connection);
-                $controller->renderScore();
-                break;
-            case 'insights':
-                require_once __DIR__ . '/../src/Controllers/MerchantController.php';
-                $controller = new MerchantController($db_connection);
-                $controller->renderInsights();
-                break;
-            case 'profile':
-                require_once __DIR__ . '/../src/Controllers/MerchantController.php';
-                $controller = new MerchantController($db_connection);
-                $controller->renderProfile();
-                break;
-            default:
-                
-                require_once __DIR__ . '/../src/Controllers/ErrorController.php';
+        $controller = new \App\Controllers\MerchantController($db);
 
-                $controller = new \App\Controllers\ErrorController();
-                $controller->handle(404);
-                break;
-        }
+        match ($action) {
+            'login'    => $controller->renderLogin(),
+            'register' => $controller->renderRegister(),
+            'score'    => $controller->renderScore(),
+            'insights' => $controller->renderInsights(),
+            'profile'  => $controller->renderProfile(),
+            'dashboard'=> $controller->renderDashboard(),
+            default    => (new \App\Controllers\ErrorController())->handle(404),
+        };
         break;
-    
+
     case 'api':
-        // soon
+        // em breve
         break;
 
     default:
-        require_once __DIR__ . '/../src/Controllers/ErrorController.php';
+        // rota inexistente é 404.
         $controller = new \App\Controllers\ErrorController();
         $controller->handle(404);
         break;

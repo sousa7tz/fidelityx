@@ -1,6 +1,6 @@
 <?php
-// src/Controllers/UnknownController.php
 
+namespace App\Controllers;
 class UnknownController {
     public function renderLandingPage() {
         echo "<h1>FidelityX - Landing Page</h1>";

@@ -1,5 +1,7 @@
 <?php 
 
+
+namespace App\Controllers;
 class MerchantController {
     private $db;
 
