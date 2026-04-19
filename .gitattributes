@@ -1,0 +1,4 @@
+# Forçar todos os arquivos .php a serem reconhecidos como PHP
+# colocamos isso para o GitHub reconhecer o PHP como linguagem do projeto,
+# pois, sem isso, o GitHub reconhece o PHP como Hack Language (linguagem do facebook).
+*.php linguist-language=PHP
