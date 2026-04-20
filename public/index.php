@@ -9,6 +9,16 @@ session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Dotenv\Dotenv;
+
+// criando instancia da biblioteca dotenv
+// __DIR__ . '/..' diz para o php subir uma pasta para encontrar o .env na raiz
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+
+// load() lê a env e guarda as informações na memoria ($_ENV)
+$dotenv->load();
+// a .env será usada no Database.php!
+
 // namespace 
 use App\Database;
 
