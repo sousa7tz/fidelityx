@@ -16,7 +16,7 @@
             <p>Registre sua empresa no ecossistema FidelityX</p>
         </header>
 
-        <form action="/api/register-merchant" method="POST">
+        <form action="index.php?url=merchant/register" method="POST">
             
             <div class="form-group">
                 <label for="owner_name">Nome do Responsável</label>

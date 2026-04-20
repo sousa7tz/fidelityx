@@ -1,4 +1,15 @@
 <?php
+// ----------------------------------------------------------------------------------------
+// explicação breve fluxo de dados, com exemplo do registro 
+
+// navegador: vê o action="index.php?url=merchant/register" e manda o POST pra lá (ele cai aqui no index.php, e o switch guia ele pro merchant, depois o match guia pro controller, e assim vai.)
+
+// index.php: lê o $_GET['url'], vê que é merchant/register.
+
+// roteador (switch/match): o seu código no index.php vê que o domínio é merchant e a ação é register.
+
+// namespace: index.php usa o namespace para chamar o controller certo: new \App\Controllers\MerchantController($db).
+// -----------------------------------------------------------------------------------------
 
 // inicializacao
 session_start();
