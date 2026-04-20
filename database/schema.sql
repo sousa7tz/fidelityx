@@ -16,17 +16,17 @@ CREATE TABLE IF NOT EXISTS merchants (
   owner_name VARCHAR(255) NOT NULL,
   store_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  phone VARCHAR(30) NULL,
+  phone VARCHAR(30) NOT NULL,
+  category VARCHAR(30) NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   plan ENUM('free', 'pro') NOT NULL DEFAULT 'free',
   status ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive',
-
-  -- para futuras implementações (NULL)
   cnpj VARCHAR(14) NULL,
   cpf VARCHAR(11) NULL,
-  address VARCHAR(255) NULL,
-  city VARCHAR(100) NULL,
-  state VARCHAR(50) NULL,
+  address VARCHAR(255) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  state VARCHAR(50) NOT NULL,
+  -- para futuras implementações (NULL)
   logo_url VARCHAR(2048) NULL,
 
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
