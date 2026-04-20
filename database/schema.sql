@@ -13,16 +13,17 @@ SET time_zone = '+00:00';
 CREATE TABLE IF NOT EXISTS merchants (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-  name VARCHAR(255) NOT NULL,
+  owner_name VARCHAR(255) NOT NULL,
   store_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   phone VARCHAR(30) NULL,
   password_hash VARCHAR(255) NOT NULL,
-  plan ENUM('free', 'pro') NOT NULL,
-  status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+  plan ENUM('free', 'pro') NOT NULL DEFAULT 'free',
+  status ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive',
 
   -- para futuras implementações (NULL)
   cnpj VARCHAR(14) NULL,
+  cpf VARCHAR(11) NULL,
   address VARCHAR(255) NULL,
   city VARCHAR(100) NULL,
   state VARCHAR(50) NULL,
@@ -32,6 +33,7 @@ CREATE TABLE IF NOT EXISTS merchants (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   UNIQUE KEY uq_merchants_email (email),
+  UNIQUE KEY uq_merchants_cpf (cpf),
   UNIQUE KEY uq_merchants_cnpj (cnpj),
   KEY idx_merchants_status (status), -- teste com indices pra melhorar a otimizacao de busca
   KEY idx_merchants_plan (plan)
