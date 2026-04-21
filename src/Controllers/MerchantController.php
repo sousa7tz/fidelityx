@@ -267,6 +267,48 @@ class MerchantController {
 
     }
     
+
+
+    public function handleLogin(){
+        $email      =    filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $password   =    $_POST['password'] ?? '';
+
+        if (!$email || !$password) {
+            header('Location: index.php?url=merchant/login&error=campos_obrigatorios');
+            exit;
+        }
+
+        $sql = 'SELECT id, owner_name, store_name, password_hash, status from merchants WHERE email = :email';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':email'    =>  $email,
+        ]);
+        $merchant = $stmt->fetch(\PDO::FETCH_ASSOC); // ESSA LINHA É PRA GERAR UM ARRAY COM OS RESULTADOS DA QUERIE
+
+
+
+        if(!$merchant || !password_verify($password, $merchant['password_hash'])){
+            header('Location: index.php?url=merchant/login&error=credenciais_invalidas');
+            exit;
+        }
+
+        // FUTURAMENTE, SERÁ IMPLEMENTADA A LÓGICA DE CONTAS ATIVAS/INATIVAS:
+
+        /*
+        if($merchant['status'] === 'inactive'){
+            header('Location: index.php?url=merchant/login&error=conta_inativa');
+            exit;
+        }
+        */
+
+        $SESSION['merchant_id']     = $merchant['id'];
+        $SESSION['merchant_name']   = $merchant['owner_name'];
+        $SESSION['store_name']      = $merchant['store_name'];
+
+
+        header('Location: index.php?url=merchant/dashboard&success=logged');
+        exit;
+    }
 }
 
 

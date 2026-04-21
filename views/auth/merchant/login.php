@@ -17,7 +17,7 @@
             <p>Painel do Lojista</p>
         </header>
 
-        <form action="/api/login-merchant" method="POST">
+        <form action="index.php?url=merchant/login" method="POST">
             <div class="form-group">
                 <label for="email">E-mail Comercial</label>
                 <input type="email" name="email" id="email" placeholder="seu@email.com" required autocomplete="email">
