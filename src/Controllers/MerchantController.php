@@ -206,9 +206,7 @@ class MerchantController {
             $cnpj = strlen($document) === 14 ? $document : null;
 
             // prepared statements
-            $sql = "INSERT INTO merchants (owner_name, store_name, address, state, city, email, phone, category, cpf, cnpj, password_hash) VALUES (:on, :sn, :address, :state, :city, :email, :phone, :category, :cpf, :cnpj, :password_hash)";
-            $stmt= $this->db->prepare($sql);
-            $stmt->execute([
+            $data = [
                 ':on'        => $owner_name,
                 ':sn'        => $store_name,
                 ':address'   => $address,
@@ -220,7 +218,7 @@ class MerchantController {
                 ':cpf'       => $cpf,
                 ':cnpj'      => $cnpj,
                 ':password_hash' => $hashedPassword
-            ]);
+            ];
 
              // se deu certo, redireciona usuario para o login
             header('Location: index.php?url=merchant/login&success=cadastrado');
