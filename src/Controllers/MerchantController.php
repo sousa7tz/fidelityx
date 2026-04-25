@@ -2,11 +2,15 @@
 
 
 namespace App\Controllers;
+use App\Models\MerchantModel;
+use App\Validators\DocumentValidator;
 class MerchantController {
     private $db;
+    private $merchantModel;
 
     public function __construct($db) {
         $this->db = $db;
+        $this->merchantModel = new MerchantModel($this->db);
     }
     
     // RENDERS ------------------------------------------------------------
@@ -38,125 +42,6 @@ class MerchantController {
 
     // HANDLES -----------------------------------------------------------
 
-    private function validarCPF($document) {
-        // remover tudo que não seja um número usando regex (expressão regular). '/\D/' representa TUDO que não seja um número 0-9.
-        //                      "/\D/" |  ''   |    $document
-        //                      remove, substitui, declara na variavel
-        $document = preg_replace('/\D/', '', (string)$document);
-    
-        // cpf precisa ter exatamente 11 dígitos
-        if (strlen($document) != 11) {
-            return false;
-        }
-    
-        // bloqueia cpf invalido com todos os dígitos iguais
-        // Ex: 11111111111, 00000000000, etc
-        if (preg_match('/(\d)\1{10}/', $document)) {
-            return false;
-        }
-    
-        // ============================
-        // CÁLCULO DOS DÍGITOS
-        // ============================
-        
-        // Loop para calcular os 2 últimos dígitos
-        for ($t = 9; $t < 11; $t++) {
-            
-            $soma = 0;
-    
-            // Multiplica cada dígito pelos pesos decrescentes
-            for ($i = 0; $i < $t; $i++) {
-                $soma += $document[$i] * (($t + 1) - $i);
-            }
-    
-            // Aplica regra do módulo 11
-            $digito = ((10 * $soma) % 11) % 10;
-    
-            // Compara com o dígito real do CPF
-            if ($document[$t] != $digito) {
-                return false;
-            }
-        }
-    
-        // se passou por tudo é valido
-        return true;
-    }
-
-    private function validarCNPJ($document) {
-        // Remove tudo que não for número
-        $document = preg_replace('/\D/', '', $document);
-        
-        // CNPJ precisa ter 14 dígitos
-        if (strlen($document) != 14) {
-            return false;
-        }
-    
-        // Bloqueia sequências inválidas (ex: 11111111111111)
-        if (preg_match('/(\d)\1{13}/', $document)) {
-            return false;
-        }
-    
-        // ============================
-        // PRIMEIRO DÍGITO VERIFICADOR
-        // ============================
-        
-        $tamanho = 12; // base sem os 2 dígitos finais
-        $numeros = substr($document, 0, $tamanho);
-        
-        $soma = 0;
-        $peso = 5;
-        
-        // Multiplica com pesos: 5 4 3 2 9 8 7 6 5 4 3 2
-        for ($i = 0; $i < $tamanho; $i++) {
-            $soma += $numeros[$i] * $peso;
-            $peso--;
-            
-            // Quando chega em 2, reinicia em 9
-            if ($peso < 2) {
-                $peso = 9;
-            }
-        }
-    
-        // Regra do módulo 11
-        $resto = $soma % 11;
-        $digito1 = ($resto < 2) ? 0 : 11 - $resto;
-        
-        // Verifica o primeiro dígito
-        if ($document[12] != $digito1) {
-            return false;
-        }
-    
-        // ============================
-        // SEGUNDO DÍGITO VERIFICADOR
-        // ============================
-        
-        $tamanho = 13;
-        $numeros = substr($document, 0, $tamanho);
-        
-        $soma = 0;
-        $peso = 6;
-        
-        // Pesos: 6 5 4 3 2 9 8 7 6 5 4 3 2
-        for ($i = 0; $i < $tamanho; $i++) {
-            $soma += $numeros[$i] * $peso;
-            $peso--;
-    
-            if ($peso < 2) {
-                $peso = 9;
-            }
-        }
-        
-        $resto = $soma % 11;
-        $digito2 = ($resto < 2) ? 0 : 11 - $resto;
-    
-        // Verifica o segundo dígito
-        if ($document[13] != $digito2) {
-            return false;
-        }
-    
-        return true;
-    }
-
     public function handleRegister(){
         // trazer dados do input
         $owner_name =   filter_input(INPUT_POST, 'owner_name');
@@ -174,13 +59,7 @@ class MerchantController {
         $document   = preg_replace('/\D/', '', (string)$document);
         $phone      = preg_replace('/\D/', '', (string)$phone);
         
-        $isValid = false;
-
-        if (strlen($document) == 11) {
-            $isValid = $this->validarCPF($document); // guardando o resultado do metodo
-        } elseif (strlen($document) == 14) {
-            $isValid = $this->validarCNPJ($document); // same thing
-        }
+        $isValid = DocumentValidator::isValid($document);
         
         // se nao for valido, ja para a requisicao
         if (!$isValid) {
@@ -220,8 +99,11 @@ class MerchantController {
                 ':password_hash' => $hashedPassword
             ];
 
+            $this->merchantModel->create($data);
+
              // se deu certo, redireciona usuario para o login
             header('Location: index.php?url=merchant/login&success=cadastrado');
+            exit;
         } catch (\PDOException $e) {
             $sqlState = $e->errorInfo[0] ?? null;
             $driverCode = (int)($e->errorInfo[1] ?? 0);
@@ -276,12 +158,7 @@ class MerchantController {
             exit;
         }
 
-        $sql = 'SELECT id, owner_name, store_name, password_hash, status from merchants WHERE email = :email';
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':email'    =>  $email,
-        ]);
-        $merchant = $stmt->fetch(\PDO::FETCH_ASSOC); // ESSA LINHA É PRA GERAR UM ARRAY COM OS RESULTADOS DA QUERIE
+        $merchant = $this->merchantModel->findByEmail($email);
 
 
 
@@ -299,9 +176,9 @@ class MerchantController {
         }
         */
 
-        $SESSION['merchant_id']     = $merchant['id'];
-        $SESSION['merchant_name']   = $merchant['owner_name'];
-        $SESSION['store_name']      = $merchant['store_name'];
+        $_SESSION['merchant_id']     = $merchant['id'];
+        $_SESSION['merchant_name']   = $merchant['owner_name'];
+        $_SESSION['store_name']      = $merchant['store_name'];
 
 
         header('Location: index.php?url=merchant/dashboard&success=logged');
