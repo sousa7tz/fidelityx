@@ -184,7 +184,25 @@ class MerchantController {
         header('Location: index.php?url=merchant/dashboard&success=logged');
         exit;
     }
-}
+    private function authGuard(){
+        if(!isset($_SESSION['merchant_id'])){
+            header('Location: /login?error=session_expired');
+            exit;
+        }
+    }
+    /** como o auth guard vai funcionar??? abaixo
+     * 
+     * public function renderDashboard() {
+        // chamar o authguard
+        $this->authGuard(); //
+
+        //            se o código chegou aqui o lojista tá logado
+        //            agora pode carregar a página
+        include 'src/views/merchant/dashboard.php'; //
+    } */
+
+
+}    
 
 
 ?>
